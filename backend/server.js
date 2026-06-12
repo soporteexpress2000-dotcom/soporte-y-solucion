@@ -55,6 +55,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Rutas de la API
+app.use('/api/auth', require('./routes/authRoutes'));
+
 // Rutas base y de diagnóstico
 app.get('/test-server', (req, res) => {
     res.send('Servidor de Soporte y Solución en funcionamiento...');

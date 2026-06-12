@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    dependencia: {
+        type: String,
+        default: ''
+    },
     activo: {
         type: Boolean,
         default: true
