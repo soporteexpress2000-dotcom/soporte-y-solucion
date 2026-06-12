@@ -57,6 +57,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas de la API
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/tickets', require('./routes/ticketRoutes'));
+app.use('/api/messages', require('./routes/messageRoutes'));
 
 // Rutas base y de diagnóstico
 app.get('/test-server', (req, res) => {
