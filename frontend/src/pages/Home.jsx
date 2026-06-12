@@ -118,7 +118,7 @@ const Home = () => {
                     <div className="w-full bg-slate-900/40 backdrop-blur-xl border border-slate-800/80 rounded-3xl shadow-2xl p-6 sm:p-10">
                         <div className="text-center mb-8">
                             <span className="bg-purple-950/80 border border-purple-800/50 text-purple-400 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
-                                Radicación Interna
+                                Radicación
                             </span>
                             <h1 className="text-2xl sm:text-3xl font-extrabold text-white mt-2">
                                 Nueva Solicitud de Soporte
