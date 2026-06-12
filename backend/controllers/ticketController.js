@@ -1,11 +1,22 @@
 const Ticket = require('../models/Ticket');
 const User = require('../models/User');
+const AccessCode = require('../models/AccessCode');
 
 // @desc    Crear un nuevo ticket/solicitud
 // @route   POST /api/tickets
 // @access  Private/Public
 const crearTicket = async (req, res) => {
-    const { titulo, descripcion, categoria, prioridad, nombreContacto, correoContacto, telefonoContacto } = req.body;
+    const { 
+        titulo, 
+        descripcion, 
+        categoria, 
+        prioridad, 
+        nombreContacto, 
+        correoContacto, 
+        telefonoContacto, 
+        dependencia, 
+        pinCode 
+    } = req.body;
 
     try {
         if (!titulo || !descripcion) {
@@ -19,23 +30,39 @@ const crearTicket = async (req, res) => {
             prioridad: prioridad || 'media'
         };
 
-        // Si el usuario está autenticado
+        // Si el usuario está autenticado (Administrador o Técnico)
         if (req.user) {
             ticketData.creadoPor = req.user._id;
-            ticketData.dependencia = req.user.dependencia || 'Sistemas';
+            ticketData.dependencia = req.user.dependencia || 'Sistemas y Tecnología';
             ticketData.nombreContacto = req.user.nombre;
             ticketData.correoContacto = req.user.email;
             ticketData.telefonoContacto = req.user.telefono || '';
         } else {
-            // Si es un ticket de contacto externo (público)
-            if (!nombreContacto || !correoContacto) {
-                return res.status(400).json({ message: 'Nombre y correo de contacto son obligatorios para solicitudes externas' });
+            // Radicación de ticket por parte de una oficina (flujo público/interno sin login)
+            if (!nombreContacto || !correoContacto || !dependencia || !pinCode) {
+                return res.status(400).json({ 
+                    message: 'El nombre, correo, oficina y el PIN son obligatorios para enviar la solicitud' 
+                });
             }
+
+            // Validar PIN de oficina
+            const pinValido = await AccessCode.findOne({ codigo: pinCode });
+            if (!pinValido) {
+                return res.status(400).json({ message: 'El PIN ingresado es incorrecto o inválido' });
+            }
+
+            // Validar que el PIN corresponda a la oficina seleccionada
+            if (pinValido.dependencia !== dependencia) {
+                return res.status(400).json({ 
+                    message: `El PIN ingresado no corresponde a la oficina seleccionada (${dependencia})` 
+                });
+            }
+
             ticketData.nombreContacto = nombreContacto;
             ticketData.correoContacto = correoContacto;
             ticketData.telefonoContacto = telefonoContacto || '';
-            ticketData.dependencia = 'Público Externo';
-            ticketData.codigoAcceso = Math.random().toString(36).substring(2, 8).toUpperCase(); // Código de 6 dígitos
+            ticketData.dependencia = dependencia;
+            ticketData.codigoAcceso = Math.random().toString(36).substring(2, 8).toUpperCase(); // Código de rastreo de 6 dígitos
         }
 
         const ticket = await Ticket.create(ticketData);

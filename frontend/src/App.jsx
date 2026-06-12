@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Toaster } from 'react-hot-toast';
+import Home from './pages/Home';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 
 // Componente de Ruta Protegida (Evita accesos no autenticados)
@@ -43,11 +43,13 @@ function App() {
             />
             <Router>
                 <Routes>
-                    {/* Rutas Públicas de Auth */}
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
+                    {/* Radicación de Tickets (Página de Inicio) */}
+                    <Route path="/" element={<Home />} />
 
-                    {/* Ruta Privada / Dashboard */}
+                    {/* Acceso para Técnicos / Admins */}
+                    <Route path="/login" element={<Login />} />
+
+                    {/* Panel de Gestión Técnico (Privado) */}
                     <Route 
                         path="/app" 
                         element={
@@ -58,7 +60,7 @@ function App() {
                     />
 
                     {/* Redirección por defecto */}
-                    <Route path="*" element={<Navigate to="/login" replace />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </Router>
         </AuthProvider>
