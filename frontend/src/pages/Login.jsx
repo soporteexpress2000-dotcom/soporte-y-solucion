@@ -46,10 +46,11 @@ const Login = () => {
                     Ingresa a tu cuenta de soporte
                 </h2>
                 <p className="mt-2 text-center text-sm text-slate-400">
-                    O{' '}
-                    <Link to="/register" className="font-semibold text-purple-400 hover:text-purple-300 transition-colors">
-                        regístrate usando tu PIN de oficina
-                    </Link>
+                    O si no tienes cuenta, haz clic{' '}
+                    <Link to="/" className="font-semibold text-purple-400 hover:text-purple-300 transition-colors">
+                        aquí
+                    </Link>{' '}
+                    para radicar una solicitud
                 </p>
             </div>
 
